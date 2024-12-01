@@ -11,6 +11,8 @@ fn main() {
     second_list.sort();
     println!("{:?}", first_list);
     println!("{:?}", second_list);
-    let sum = std::iter::zip(first_list, second_list).map(|(a, b)| (a - b).abs()).sum::<i32>();
+    let sum = std::iter::zip(first_list, second_list)
+        .map(|(a, b)| (a - b).abs())
+        .sum::<i32>();
     println!("{}", sum);
 }

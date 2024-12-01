@@ -9,6 +9,9 @@ fn main() {
     }
     println!("{:?}", first_list);
     println!("{:?}", second_list);
-    let sum = first_list.iter().map(|x| second_list.iter().filter(|a| *a == x).count() as i32 * x).sum::<i32>();
+    let sum = first_list
+        .iter()
+        .map(|x| second_list.iter().filter(|a| *a == x).count() as i32 * x)
+        .sum::<i32>();
     println!("{}", sum);
 }
