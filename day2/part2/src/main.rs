@@ -1,16 +1,13 @@
 fn main() {
     let input = std::fs::read_to_string("input.txt").unwrap();
-    let mut reports = Vec::<Vec<i32>>::new();
-    for line in input.lines() {
-        let mut new_report = Vec::new();
-        for number in line
-            .split_ascii_whitespace()
-            .map(|x| x.parse::<i32>().unwrap())
-        {
-            new_report.push(number)
-        }
-        reports.push(new_report);
-    }
+    let reports: Vec<Vec<i32>> = input
+        .lines()
+        .map(|line| {
+            line.split_ascii_whitespace()
+                .map(|x| x.parse::<i32>().unwrap())
+                .collect()
+        })
+        .collect();
     println!("{:?}", reports);
     let mut num_safe = 0;
     for report in reports {
