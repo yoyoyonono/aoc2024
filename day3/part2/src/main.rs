@@ -22,22 +22,39 @@ fn main() {
         let Some(comma_index) = input[start_index..].find(",") else {
             continue;
         };
-        if comma_index > 3 || !input[start_index .. start_index + comma_index].chars().all(|x| x.is_digit(10)) {
+        if comma_index > 3
+            || !input[start_index..start_index + comma_index]
+                .chars()
+                .all(|x| x.is_digit(10))
+        {
             continue;
         }
         // find close paren
         let Some(close_paren_index) = input[start_index + comma_index + 1..].find(")") else {
             continue;
         };
-        if close_paren_index > 3 || !input[start_index + comma_index + 1.. start_index + comma_index + 1 + close_paren_index].chars().all(|x| x.is_digit(10)) {
+        if close_paren_index > 3
+            || !input
+                [start_index + comma_index + 1..start_index + comma_index + 1 + close_paren_index]
+                .chars()
+                .all(|x| x.is_digit(10))
+        {
             continue;
         }
-        let first_num: i32 = input[start_index..start_index + comma_index].parse().unwrap();
-        let second_num: i32 = input[start_index + comma_index + 1..start_index + comma_index + 1 + close_paren_index].parse().unwrap();
+        let first_num: i32 = input[start_index..start_index + comma_index]
+            .parse()
+            .unwrap();
+        let second_num: i32 = input
+            [start_index + comma_index + 1..start_index + comma_index + 1 + close_paren_index]
+            .parse()
+            .unwrap();
 
         sum += first_num * second_num;
 
-        println!("{} {} {} | {} {}", start_index, comma_index, close_paren_index, first_num, second_num);
+        println!(
+            "{} {} {} | {} {}",
+            start_index, comma_index, close_paren_index, first_num, second_num
+        );
     }
     println!("{}", sum);
 }
