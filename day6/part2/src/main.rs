@@ -1,3 +1,4 @@
+use rayon::iter::*;
 use std::collections::HashSet;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -33,6 +34,7 @@ fn main() {
     let affected_spaces = find_spaces(grid.clone());
 
     let sum: i32 = (0..grid.len())
+        .par_bridge()
         .map(|row| {
             (0..grid[row].len())
                 .map(|col| {
@@ -56,7 +58,6 @@ fn main() {
 }
 
 fn find_spaces(grid: Vec<Vec<Option<GridSpace>>>) -> HashSet<[usize; 2]> {
-
     // find guard position
     let mut guard_pos: [isize; 2] = [0, 0];
 
@@ -105,7 +106,10 @@ fn find_spaces(grid: Vec<Vec<Option<GridSpace>>>) -> HashSet<[usize; 2]> {
             _ => {}
         }
 
-        visited_spaces.insert([guard_pos[0].try_into().unwrap(), guard_pos[1].try_into().unwrap()]);
+        visited_spaces.insert([
+            guard_pos[0].try_into().unwrap(),
+            guard_pos[1].try_into().unwrap(),
+        ]);
 
         // move
         match current_direction {
