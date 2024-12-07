@@ -133,6 +133,7 @@ fn find_spaces(grid: Vec<Vec<Option<GridSpace>>>) -> HashSet<[usize; 2]> {
 
 fn does_loop(grid: Vec<Vec<Option<GridSpace>>>) -> bool {
     // find guard position
+    let mut guard_pos = [0, 0];
     'outer: for (row_index, row) in grid.iter().enumerate() {
         for (col_index, space) in row.iter().enumerate() {
             if let Some(GridSpace::Guard) = space {
@@ -148,9 +149,9 @@ fn does_loop(grid: Vec<Vec<Option<GridSpace>>>) -> bool {
     while guard_pos[0] >= 0 && guard_pos[0] < rows && guard_pos[1] >= 0 && guard_pos[1] < cols {
         let guard_row = guard_pos[0] as usize;
         let guard_col = guard_pos[1] as usize;
+        // check
         if let Some(GridSpace::Obstruction) = grid[guard_row][guard_col] {
             match current_direction {
-        // check
                 Direction::Up => {
                     guard_pos[0] += 1;
                     current_direction = Direction::Right;
