@@ -147,7 +147,7 @@ fn does_loop(grid: Vec<Vec<Option<GridSpace>>>) -> bool {
     }
 
     let mut current_direction = Direction::Up;
-    let mut visited_spaces = HashSet::new();
+    let mut visited_spaces = HashSet::with_capacity(grid.len() * grid[0].len() * 4);
 
     while (guard_pos[0] >= 0)
         && (guard_pos[0] < grid.len().try_into().unwrap())
@@ -179,11 +179,10 @@ fn does_loop(grid: Vec<Vec<Option<GridSpace>>>) -> bool {
             },
             _ => {}
         }
-        let entry = ([guard_pos[0], guard_pos[1]], current_direction.clone());
-        if visited_spaces.contains(&entry) {
+        let entry = (guard_pos[0], guard_pos[1], current_direction.clone());
+        if !visited_spaces.insert(entry) {
             return true;
         }
-        visited_spaces.insert(entry);
         // move
         match current_direction {
             Direction::Up => {
