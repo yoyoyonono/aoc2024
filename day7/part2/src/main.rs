@@ -1,5 +1,5 @@
 use rayon::iter::*;
-use std::fmt::format;
+use memoize::memoize;
 
 #[derive(Debug)]
 struct Equation {
@@ -31,7 +31,8 @@ fn main() {
         .collect();
 
     let sum: i128 = equations
-        .par_iter()
+        //.par_iter()
+        .iter()
         .map(|equation| {
             if (generate_combinations(equation.numbers.len())
                 .iter()
@@ -57,6 +58,7 @@ fn main() {
     println!("{sum}");
 }
 
+#[memoize]
 fn generate_combinations(length: usize) -> Vec<Vec<Operator>> {
     let mut combinations = Vec::new();
     let base: i128 = 3;
@@ -85,11 +87,12 @@ fn generate_combinations(length: usize) -> Vec<Vec<Operator>> {
 
 fn evaluate_equation(numbers: Vec<i128>, operators: Vec<Operator>) -> i128 {
     let mut result = numbers[0];
+    let ten: i128 = 10;
     for (number, operator) in std::iter::zip(numbers[1..].iter(), operators.iter()) {
         match operator {
             Operator::Plus => result += number,
             Operator::Times => result *= number,
-            Operator::Concatenate => result = format!("{result}{number}").parse().unwrap(),
+            Operator::Concatenate => result = result * ten.pow(number.checked_ilog10().unwrap_or(0) + 1) + number
         };
     }
     result
