@@ -29,49 +29,48 @@ fn main() {
 
     let mut to_check = system.len() - 1;
 
-    print_system(&system);
+    // print_system(&system);
 
     let mut settled = HashSet::new();
 
     'outer: while system.len() > num_some {
-        let system_check = system.clone();
+        let mut changes = Vec::new();
         if let Some(number) = system[to_check] {
-            system[to_check] = None;
+            changes.push(to_check);
             to_check -= 1;
 
             let mut len = 1;
             // find length
             while let Some(x) = system[to_check] {
-                system[to_check] = None;
+                changes.push(to_check);
                 if to_check == 0 {
                     break 'outer;
                 }
                 to_check -= 1;
                 if x != number {
-                    system[to_check + 1] = Some(x);
                     to_check += 1;
+                    changes.pop();
                     break;
                 }
                 len += 1;
             }
 
-            if !settled.contains(&number) {
-                // find first bank of nones long enough
-                if let Some(gap_index) = find_gap(&system_check, len) {
-                    if gap_index < to_check {
-                        for i in gap_index..gap_index + len {
-                            system[i] = Some(number);
-                        }
-                        settled.insert(number);
-                    } else {
-                        system = system_check;
-                    }
-                } else {
-                    system = system_check;
-                }
-            } else {
-                system = system_check;
+            if settled.contains(&number) {
+                continue;
             }
+            // find first bank of nones long enough
+            if let Some(gap_index) = find_gap(&system, len) {
+                if gap_index > to_check {
+                    continue;
+                }
+                for i in gap_index..gap_index + len {
+                    system[i] = Some(number);
+                }
+                settled.insert(number);
+            } else {
+                continue;
+            }
+            make_changes(&mut system, changes);
         } else {
             to_check -= 1;
         }
@@ -84,6 +83,12 @@ fn main() {
     }
 
     println!("{}", checksum(&system));
+}
+
+fn make_changes(system: &mut Vec<Option<usize>>, changes: Vec<usize>) {
+    for change in changes {
+        system[change] = None;
+    }
 }
 
 fn print_system(system: &Vec<Option<usize>>) {
