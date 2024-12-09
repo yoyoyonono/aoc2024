@@ -43,7 +43,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "part1"
+name = "part2"
 version = "0.1.0"
 dependencies = [
  "itertools",
