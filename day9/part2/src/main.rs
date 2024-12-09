@@ -1,10 +1,12 @@
 use std::collections::HashSet;
 
-
 fn main() {
     let input = include_str!("../input.txt");
     // let input = include_str!("../input_test.txt");
-    let numbers: Vec<usize> = input.chars().map(|x| x.to_digit(10).unwrap() as usize).collect();
+    let numbers: Vec<usize> = input
+        .chars()
+        .map(|x| x.to_digit(10).unwrap() as usize)
+        .collect();
 
     let mut system: Vec<Option<usize>> = numbers
         .iter()
@@ -16,7 +18,7 @@ fn main() {
             1 => {
                 vec![None; *number]
             }
-            _ => panic!()
+            _ => panic!(),
         })
         .flatten()
         .collect();
@@ -58,7 +60,7 @@ fn main() {
                 if let Some(gap_index) = find_gap(&system_check, len) {
                     if gap_index < to_check {
                         for i in gap_index..gap_index + len {
-                            system[i] = Some(number);                    
+                            system[i] = Some(number);
                         }
                         settled.insert(number);
                     } else {
@@ -82,7 +84,6 @@ fn main() {
     }
 
     println!("{}", checksum(&system));
-    
 }
 
 fn print_system(system: &Vec<Option<usize>>) {
@@ -100,12 +101,14 @@ fn print_system(system: &Vec<Option<usize>>) {
 }
 
 fn checksum(system: &Vec<Option<usize>>) -> usize {
-    system.iter().enumerate().map(|(i, number)| {
-        match number {
+    system
+        .iter()
+        .enumerate()
+        .map(|(i, number)| match number {
             Some(x) => i * x,
-            None => 0
-    }}
-    ).sum()
+            None => 0,
+        })
+        .sum()
 }
 
 fn find_gap(system: &Vec<Option<usize>>, target_gap: usize) -> Option<usize> {
@@ -113,12 +116,8 @@ fn find_gap(system: &Vec<Option<usize>>, target_gap: usize) -> Option<usize> {
 
     for (i, x) in system.iter().enumerate() {
         match x {
-            Some(_) => {
-                gap_size = 0
-            }
-            None => {
-                gap_size += 1
-            }
+            Some(_) => gap_size = 0,
+            None => gap_size += 1,
         }
         if gap_size == target_gap {
             return Some(i - gap_size + 1);

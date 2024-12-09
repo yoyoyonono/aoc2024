@@ -1,8 +1,10 @@
-
 fn main() {
     let input = include_str!("../input.txt");
     //let input = include_str!("../input_test.txt");
-    let numbers: Vec<usize> = input.chars().map(|x| x.to_digit(10).unwrap() as usize).collect();
+    let numbers: Vec<usize> = input
+        .chars()
+        .map(|x| x.to_digit(10).unwrap() as usize)
+        .collect();
 
     let mut system: Vec<Option<usize>> = numbers
         .iter()
@@ -14,7 +16,7 @@ fn main() {
             1 => {
                 vec![None; *number]
             }
-            _ => panic!()
+            _ => panic!(),
         })
         .flatten()
         .collect();
@@ -25,7 +27,13 @@ fn main() {
 
     while system.len() > num_some {
         if let Some(number) = system.pop().unwrap() {
-            let first_none = system.iter().enumerate().filter(|(i, x)| x.is_none()).nth(0).unwrap().0;
+            let first_none = system
+                .iter()
+                .enumerate()
+                .filter(|(i, x)| x.is_none())
+                .nth(0)
+                .unwrap()
+                .0;
             system[first_none] = Some(number);
         }
 
@@ -33,7 +41,6 @@ fn main() {
     }
 
     println!("{}", checksum(&system));
-    
 }
 
 fn print_system(system: &Vec<Option<usize>>) {
@@ -51,5 +58,9 @@ fn print_system(system: &Vec<Option<usize>>) {
 }
 
 fn checksum(system: &Vec<Option<usize>>) -> usize {
-    system.iter().enumerate().map(|(i, number)| i * number.unwrap()).sum()
+    system
+        .iter()
+        .enumerate()
+        .map(|(i, number)| i * number.unwrap())
+        .sum()
 }
