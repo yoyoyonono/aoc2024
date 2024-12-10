@@ -7,7 +7,6 @@ fn main() {
         .lines()
         .map(|line| line.chars().map(|c| c.to_digit(10).unwrap()).collect())
         .collect();
-    println!("{:?}", grid);
 
     let zero_pos: Vec<[usize; 2]> = grid
         .iter()
