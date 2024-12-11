@@ -1,8 +1,10 @@
 use std::collections::HashSet;
 
 fn main() {
-    let input = include_str!("../input.txt");
-    // let input = include_str!("../input_test.txt");
+    // let input = include_str!("../input.txt");
+    let input = include_str!("../input_test.txt");
+    // let input = include_str!("../input_bonus.txt");
+    // let input = include_str!("../input_bonus2.txt");
     let numbers: Vec<usize> = input
         .chars()
         .map(|x| x.to_digit(10).unwrap() as usize)
@@ -34,6 +36,7 @@ fn main() {
     let mut settled = HashSet::new();
 
     'outer: while system.len() > num_some {
+        println!("{to_check} \t {}", system[to_check].unwrap_or_default());
         let mut changes = Vec::new();
         if let Some(number) = system[to_check] {
             changes.push(to_check);
