@@ -1,3 +1,4 @@
+use colored::Colorize;
 use rayon::iter::*;
 use std::collections::HashSet;
 
@@ -27,6 +28,22 @@ fn main() {
     }
 
     println!("{:?}", regions);
+
+    println!(
+        "Max size: {}, {}",
+        regions
+            .iter()
+            .map(|x| convert_region(x))
+            .map(|x| get_bottom(&x) - get_top(&x))
+            .max()
+            .unwrap(),
+        regions
+            .iter()
+            .map(|x| convert_region(x))
+            .map(|x| get_right(&x) - get_left(&x))
+            .max()
+            .unwrap()
+    );
 
     let sum: u32 = regions
         // .par_iter()
@@ -99,10 +116,7 @@ fn any_has(sets: &Vec<HashSet<[usize; 2]>>, pos: [usize; 2]) -> bool {
 }
 
 fn check_sides_region(region: &HashSet<[usize; 2]>) -> u32 {
-    let region_conv: HashSet<[isize; 2]> = region
-        .iter()
-        .map(|x| [x[0].try_into().unwrap(), x[1].try_into().unwrap()])
-        .collect();
+    let region_conv = convert_region(region);
     let leftmost: isize = get_left(&region_conv);
     let rightmost: isize = get_right(&region_conv);
     let top_row: isize = get_top(&region_conv);
@@ -156,10 +170,10 @@ fn traverse_sides(
     let initial_direction = get_initial_direction(region_conv, pos);
 
     let mut sides = 0;
-    let mut direction = initial_direction;
+    let mut direction: Direction = initial_direction;
 
     while !(pos == initial_pos && direction == initial_direction) || sides < 4 {
-        print_vizualise(region_conv, pos);
+        print_vizualise(region_conv, pos, sides);
         path.insert(pos);
         match direction {
             Direction::Right => {
@@ -217,8 +231,6 @@ fn traverse_sides(
         }
     }
 
-    println!("{sides} sides");
-
     (sides, path)
 }
 
@@ -254,22 +266,35 @@ fn get_initial_direction(region_conv: &HashSet<[isize; 2]>, pos: [isize; 2]) -> 
     panic!()
 }
 
-fn print_vizualise(region_conv: &HashSet<[isize; 2]>, pos: [isize; 2]) {
+fn print_vizualise(region_conv: &HashSet<[isize; 2]>, pos: [isize; 2], sides: u32) {
     let leftmost: isize = get_left(region_conv);
     let rightmost: isize = get_right(region_conv);
     let top_row: isize = get_top(region_conv);
     let bottom_row: isize = get_bottom(region_conv);
 
+    print!("\x1B[2J\x1B[1;1H");
+    println!("Position: {:?}", pos);
+    println!("Sides: {}", sides);
+    println!();
     for row in top_row - 1..=bottom_row + 1 {
         for col in leftmost - 1..=rightmost + 1 {
             if [row, col] == pos {
-                print!("X");
+                print!("{}", "\u{2588}".red());
             } else if region_conv.contains(&[row, col]) {
-                print!("z");
+                print!("{}", "\u{2588}".white());
             } else {
-                print!(".");
+                print!(" ");
             }
         }
         println!();
     }
+
+    // std::thread::sleep(std::time::Duration::from_millis(100));
+}
+
+fn convert_region(region: &HashSet<[usize; 2]>) -> HashSet<[isize; 2]> {
+    region
+        .iter()
+        .map(|x| [x[0].try_into().unwrap(), x[1].try_into().unwrap()])
+        .collect()
 }
