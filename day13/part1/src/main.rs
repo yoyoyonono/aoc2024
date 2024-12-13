@@ -23,7 +23,10 @@ fn main() {
         })
         .collect();
     println!("{:?}", machines);
-    let sum: i32 = machines.iter().map(|x| find_cheap_way(*x).unwrap_or(0)).sum();
+    let sum: i32 = machines
+        .iter()
+        .map(|x| find_cheap_way(*x).unwrap_or(0))
+        .sum();
     println!("{sum}");
 }
 
@@ -54,7 +57,7 @@ fn find_cheap_way(machine: Machine) -> Option<i32> {
         );
 
         // println!("{num_a} {num_b} {:?}", new_try);
-         
+
         if new_try[0] < machine.prize[0] && new_try[1] < machine.prize[1] {
             num_a += 1;
             continue;
@@ -63,7 +66,7 @@ fn find_cheap_way(machine: Machine) -> Option<i32> {
                 minimum_price,
                 num_b * button_b_price + num_a * button_a_price,
             );
-        } 
+        }
         num_b -= 1;
         num_a = 0;
     }
