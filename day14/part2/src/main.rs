@@ -61,7 +61,6 @@ fn main() {
             print_robots(&new_robots, size);
         }
     }
-
 }
 
 fn robot_step(robot: &Robot, size: Pair) -> Robot {
@@ -127,5 +126,3 @@ fn how_christmas(robots: &Vec<Robot>, size: Pair) -> i32 {
 
     *row_totals.iter().max().unwrap() * *col_totals.iter().max().unwrap()
 }
-
-
