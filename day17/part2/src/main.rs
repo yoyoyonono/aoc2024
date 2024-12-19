@@ -21,82 +21,24 @@ fn main() {
     let mut reg_b: i128 = registers.next().unwrap().split_at(12).1.parse().unwrap();
     let mut reg_c: i128 = registers.next().unwrap().split_at(12).1.parse().unwrap();
 
-    let mut solution: Vec<i128> = vec![];
+    let mut solution: i128 = 0;
 
-    // for every digit in the program, backwards
+    let correct_digits = 0;
 
-    let mut len_old = 0;
+    loop {
+        let output = run_program(solution, reg_b, reg_c, &program);
+        println!("{}, {:?}", solution, output);
 
-    'outer: loop {
-        len_old = solution.len();
-        for i in 0..8 {
-            solution.push(i);
-            let number = solution_to_number(&solution);
-
-            let output = run_program(number, reg_b, reg_c, &program);
-            println!("{:?}| {}, {:#016b}: {:?}", solution, number, number, output);
-            if output == program {
-                break 'outer;
-            }
-            if output.len() <= program.len() && output == program[program.len() - output.len()..] {
-                break;
-            }
-            solution.pop();
+        if output == program {
+            break;
         }
-        if solution.len() > len_old {
+
+        if output == program[program.len() - output.len()..] {
+            solution <<= 3;
             continue;
         }
-        solution.pop();
-        len_old = solution.len();
-        for i in 0..8 {
-            for j in 0..8 {
-                solution.push(i);
-                solution.push(j);
-                let number = solution_to_number(&solution);
 
-                let output = run_program(number, reg_b, reg_c, &program);
-                println!("{:?}| {}, {:#016b}: {:?}", solution, number, number, output);
-                if output == program {
-                    break 'outer;
-                }
-                if output.len() <= program.len()
-                    && output == program[program.len() - output.len()..]
-                {
-                    break;
-                }
-                solution.pop();
-                solution.pop();
-            }
-        }
-        if solution.len() > len_old {
-            continue;
-        }
-        solution.pop();
-        solution.pop();
-        for i in 0..8 {
-            for j in 0..8 {
-                for k in 0..8 {
-                    solution.push(i);
-                    solution.push(j);
-                    solution.push(k);
-                    let number = solution_to_number(&solution);
-
-                    let output = run_program(number, reg_b, reg_c, &program);
-                    println!("{:?}| {}, {:#016b}: {:?}", solution, number, number, output);
-                    if output == program {
-                        break 'outer;
-                    }
-                    if output.len() <= program.len()
-                        && output == program[program.len() - output.len()..]
-                    {
-                        break;
-                    }
-                    solution.pop();
-                    solution.pop();
-                    solution.pop();
-                }
-            }
-        }
+        solution += 1;
     }
 }
 
